@@ -193,12 +193,11 @@ namespace Reachebility_non_wpf
         public Form1()
         {
             InitializeComponent();
-            mybitmap = new Bitmap(
-            pictureBox1.ClientRectangle.Width,
-            pictureBox1.ClientRectangle.Height,
-            PixelFormat.Format32bppArgb);
-
+            mybitmap = new Bitmap(pictureBox1.ClientRectangle.Width,
+              pictureBox1.ClientRectangle.Height,
+              PixelFormat.Format32bppArgb);
         }
+
         private void bRefresh_Click(object sender, EventArgs e)
         {
             DrawBitmap();
@@ -244,13 +243,77 @@ namespace Reachebility_non_wpf
 
         }
 
+        private void testpoly()
+        {
+            Polygons subj = new Polygons(2);
+            subj.Add(new Polygon(4));
+            subj[0].Add(new IntPoint(180, 200));
+            subj[0].Add(new IntPoint(260, 200));
+            subj[0].Add(new IntPoint(260, 150));
+            subj[0].Add(new IntPoint(180, 150));
+        }
 
         private void DrawBitmap(bool justClip = false)
         {
-            //затуп             
 
-            pictureBox1.Image = mybitmap;
+            pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
+            pictureBox1.Location = new Point(0, 0);
+            Bitmap bm = new Bitmap(280, 110);
+            using (Graphics gr = Graphics.FromImage(bm))
+            {
+                gr.SmoothingMode = SmoothingMode.AntiAlias;
+
+                Rectangle rect = new Rectangle(10, 10, 260, 90);
+                gr.FillEllipse(Brushes.LightGreen, rect);
+                using (Pen thick_pen = new Pen(Color.Blue, 5))
+                {
+                    gr.DrawEllipse(thick_pen, rect);
+                }
+            }
+
+            pictureBox1.Image = bm;
+            /* try
+             {
+
+                 GenerateRandomPolygon((int)nudCount.Value); 
+                 using (Graphics newgraphic = Graphics.FromImage(mybitmap))
+                 using (GraphicsPath path = new GraphicsPath())
+                 {
+                     newgraphic.SmoothingMode = SmoothingMode.AntiAlias;
+                     newgraphic.Clear(Color.White);
+                     foreach (Polygon pg in subjects)
+                     {
+                         PointF[] pts = PolygonToPointFArray(pg, scale);
+                         path.AddPolygon(pts);
+                         pts = null;
+                     }
+
+                     using (Pen myPen = new Pen(Color.FromArgb(196, 0xC3, 0xC9, 0xCF), (float)0.6))
+                     using (SolidBrush myBrush = new SolidBrush(Color.FromArgb(127, 0xDD, 0xDD, 0xF0)))
+                     {
+                         newgraphic.FillPath(myBrush, path);
+                         newgraphic.DrawPath(myPen, path);
+                         path.Reset();
+                     }
+
+
+                 }
+                 pictureBox1.Image = mybitmap;
+             }
+             finally
+             {
+                 Cursor.Current = Cursors.Default;
+             }
+             */
+
         }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+            DrawBitmap();
+        }
+
+
         private void nudCount_ValueChanged(object sender, EventArgs e)
         {
             DrawBitmap(true);
